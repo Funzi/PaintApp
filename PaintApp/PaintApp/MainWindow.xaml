@@ -5,8 +5,116 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PaintApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="350" Width="525"
+        MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" MouseMove="MainCanvas_MouseMove">
+    <Window.Resources>
+        <Style x:Key="menu_item_big" TargetType="MenuItem">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="20"/>
+        </Style>
+    </Window.Resources>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" MaxHeight="50"/>
+            <RowDefinition Height="50" MaxHeight="50"/>
+            <RowDefinition Height="280"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0">
+            <Menu>
+                <MenuItem Header="_File">
+                    <MenuItem Header="_New" Click="MenuItem_New_Click"/>
+                    <MenuItem Header="_Open"/>
+                    <MenuItem Header="_Save"/>
+                    <MenuItem Header="_Exit" Click="MenuItem_Open_Click"/>
+                </MenuItem>
+                <MenuItem Header="_Paint" Click="MenuItem_Click"/>
+            </Menu>
+        </Grid>
+        <Grid Grid.Row="1">
+            <ToolBar>
+                <Button Name="ShapeButtton" Click="ShapeButtton_Click">
+                    <DockPanel>
+                        <Canvas Height="15" Width="20" DockPanel.Dock="Left">
+                            <Rectangle Width="20" Height="15" Stroke="Black"/>
+                        </Canvas>
+
+                        <ComboBox Name="shapeComboCox" Width="0" DockPanel.Dock="Right" SelectionChanged="ComboBox_SelectionChanged">
+                        <ComboBoxItem>
+                            <StackPanel>
+                                <Canvas Height="15" Width="20">
+                                    <Rectangle Width="20" Height="15" Stroke="Black"/>
+                                </Canvas>
+                            </StackPanel>
+                        </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel>
+                                    <Canvas Height="15" Width="20">
+                                        <Ellipse Width="20" Height="15" Stroke="Black"/>
+                                    </Canvas>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel>
+                                    <Canvas Height="15" Width="20">
+                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="1" />
+                                    </Canvas>
+                                </StackPanel>
+                            </ComboBoxItem>
+                        </ComboBox>
+                    </DockPanel>
+                </Button>
+               
+                <Separator/>
+                <Button x:Name="brushButtton" Click="brushButtton_Click">
+                    <DockPanel>
+                        <Canvas Height="15" Width="20">
+                            <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="1" />
+                        </Canvas>
+
+                        <ComboBox x:Name="brushComboBox" Width="0" DockPanel.Dock="Right" SelectionChanged="brushComboBox_SelectionChanged">
+                            <ComboBoxItem>
+                                <StackPanel>
+                                    <Canvas Height="15" Width="20">
+                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="1" />
+                                    </Canvas>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel>
+                                    <Canvas Height="15" Width="20">
+                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="3" />
+                                    </Canvas>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel>
+                                    <Canvas Height="15" Width="20">
+                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="5" />
+                                    </Canvas>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel>
+                                    <Canvas Height="15" Width="20">
+                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="10" />
+                                    </Canvas>
+                                </StackPanel>
+                            </ComboBoxItem>
+                        </ComboBox>
+                    </DockPanel>
+                </Button>
+
+                <Separator/>
+                <Button Name="colorButtton" Click="ColorButtton_Click">
+                    <DockPanel>
+                        <Canvas Height="15" Width="20">
+                            <Rectangle Width="20" Height="15" Stroke="Black" Fill="Black"/>
+                        </Canvas>
+                    </DockPanel>
+                </Button>
+            </ToolBar>
+        </Grid>
+       <Canvas Grid.Row="2" Name="MainCanvas"  MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" MouseMove="MainCanvas_MouseMove"/>
     </Grid>
 </Window>
