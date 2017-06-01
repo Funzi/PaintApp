@@ -29,15 +29,14 @@
                     <MenuItem Header="_Save as" Click="MenuItem_Save_as_Click"/>
                     <MenuItem Header="_Exit" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
-                <MenuItem Header="_Paint" Click="MenuItem_Click"/>
             </Menu>
         </Grid>
         <Grid Grid.Row="1">
             <ToolBar x:Name="itemsToolbar">
                 <Button Name="ShapeButtton" Click="ShapeButtton_Click">
                     <DockPanel>
-                        <StackPanel Width="20" Height="15">
-                            <Image Stretch="UniformToFill" Source="{Binding MyDataProperty}"/>
+                        <StackPanel Width="20" Height="20">
+                            <Image x:Name="shapeImage" Stretch="UniformToFill"/>
                         </StackPanel>
 
                         <ComboBox Name="shapeComboCox" Width="0" DockPanel.Dock="Right" SelectionChanged="ComboBox_SelectionChanged">
@@ -64,7 +63,7 @@
                 <Button x:Name="brushButtton" Click="brushButtton_Click">
                     <DockPanel>
                         <StackPanel Width="20" Height="20" >
-                            <Image Stretch="UniformToFill" Source="Images/Thickness1.png"/>
+                            <Image x:Name="brushImage" Stretch="UniformToFill"/>
                         </StackPanel>
 
                         <ComboBox x:Name="brushComboBox" Width="0" DockPanel.Dock="Right" SelectionChanged="brushComboBox_SelectionChanged">
@@ -85,7 +84,7 @@
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel>
-                                    <StackPanel Width="20" Height="15">
+                                    <StackPanel Width="20" Height="20">
                                         <Image Stretch="Uniform" Source="Images/Thickness7.png"/>
                                     </StackPanel>
                                 </StackPanel>
