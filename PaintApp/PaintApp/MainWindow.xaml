@@ -18,47 +18,42 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="20" MaxHeight="50"/>
             <RowDefinition Height="50" MaxHeight="50"/>
-            <RowDefinition Height="280"/>
+            <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu>
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" Click="MenuItem_New_Click"/>
-                    <MenuItem Header="_Open"/>
-                    <MenuItem Header="_Save"/>
-                    <MenuItem Header="_Exit" Click="MenuItem_Open_Click"/>
+                    <MenuItem Header="_Open" Click="MenuItem_Open_Click"/>
+                    <MenuItem Header="_Save" Click="MenuItem_Save_Click"/>
+                    <MenuItem Header="_Save as" Click="MenuItem_Save_as_Click"/>
+                    <MenuItem Header="_Exit" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
                 <MenuItem Header="_Paint" Click="MenuItem_Click"/>
             </Menu>
         </Grid>
         <Grid Grid.Row="1">
-            <ToolBar>
+            <ToolBar x:Name="itemsToolbar">
                 <Button Name="ShapeButtton" Click="ShapeButtton_Click">
                     <DockPanel>
-                        <Canvas Height="15" Width="20" DockPanel.Dock="Left">
-                            <Rectangle Width="20" Height="15" Stroke="Black"/>
-                        </Canvas>
+                        <StackPanel Width="20" Height="15">
+                            <Image Stretch="UniformToFill" Source="{Binding MyDataProperty}"/>
+                        </StackPanel>
 
                         <ComboBox Name="shapeComboCox" Width="0" DockPanel.Dock="Right" SelectionChanged="ComboBox_SelectionChanged">
                         <ComboBoxItem>
-                            <StackPanel>
-                                <Canvas Height="15" Width="20">
-                                    <Rectangle Width="20" Height="15" Stroke="Black"/>
-                                </Canvas>
-                            </StackPanel>
+                            <StackPanel Width="20" Height="20">
+                                    <Image Stretch="UniformToFill" Source="Images/Rectangle.png"/>
+                             </StackPanel>
                         </ComboBoxItem>
                             <ComboBoxItem>
-                                <StackPanel>
-                                    <Canvas Height="15" Width="20">
-                                        <Ellipse Width="20" Height="15" Stroke="Black"/>
-                                    </Canvas>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="UniformToFill" Source="Images/Ellipse.png"/>
                                 </StackPanel>
                             </ComboBoxItem>
                             <ComboBoxItem>
-                                <StackPanel>
-                                    <Canvas Height="15" Width="20">
-                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="1" />
-                                    </Canvas>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="UniformToFill" Source="Images/Line.png"/>
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
@@ -68,37 +63,31 @@
                 <Separator/>
                 <Button x:Name="brushButtton" Click="brushButtton_Click">
                     <DockPanel>
-                        <Canvas Height="15" Width="20">
-                            <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="1" />
-                        </Canvas>
+                        <StackPanel Width="20" Height="20" >
+                            <Image Stretch="UniformToFill" Source="Images/Thickness1.png"/>
+                        </StackPanel>
 
                         <ComboBox x:Name="brushComboBox" Width="0" DockPanel.Dock="Right" SelectionChanged="brushComboBox_SelectionChanged">
                             <ComboBoxItem>
-                                <StackPanel>
-                                    <Canvas Height="15" Width="20">
-                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="1" />
-                                    </Canvas>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="UniformToFill" Source="Images/Thickness1.png"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="UniformToFill" Source="Images/Thickness3.png"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="Fill" Source="Images/Thickness5.png"/>
                                 </StackPanel>
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel>
-                                    <Canvas Height="15" Width="20">
-                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="3" />
-                                    </Canvas>
-                                </StackPanel>
-                            </ComboBoxItem>
-                            <ComboBoxItem>
-                                <StackPanel>
-                                    <Canvas Height="15" Width="20">
-                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="5" />
-                                    </Canvas>
-                                </StackPanel>
-                            </ComboBoxItem>
-                            <ComboBoxItem>
-                                <StackPanel>
-                                    <Canvas Height="15" Width="20">
-                                        <Line X1="0" Y1="8" X2="20" Y2="8" Stroke="Black" StrokeThickness="10" />
-                                    </Canvas>
+                                    <StackPanel Width="20" Height="15">
+                                        <Image Stretch="Uniform" Source="Images/Thickness7.png"/>
+                                    </StackPanel>
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
@@ -108,10 +97,24 @@
                 <Separator/>
                 <Button Name="colorButtton" Click="ColorButtton_Click">
                     <DockPanel>
-                        <Canvas Height="15" Width="20">
-                            <Rectangle Width="20" Height="15" Stroke="Black" Fill="Black"/>
+                        <Canvas Height="20" Width="20">
+                            <Rectangle Width="20" Height="15" Stroke="{Binding PenBrush}" Fill="{Binding PenBrush}"/>
                         </Canvas>
                     </DockPanel>
+                </Button>
+                <Separator/>
+                <Button x:Name="penButton" Click="penButton_Click">
+                    <StackPanel Width="20" Height="20">
+                        <Image Source="Images/Pencil-icon.png">
+                        </Image>
+                    </StackPanel>
+                </Button>
+                <Separator/>
+                <Button x:Name="rubberButton" Click="rubberButton_Click">
+                    <StackPanel Width="20" Height="20">
+                        <Image Stretch="Uniform" Source="Images/eraser.png">
+                        </Image>
+                    </StackPanel>
                 </Button>
             </ToolBar>
         </Grid>

@@ -57,6 +57,7 @@
     <Compile Include="ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MyData.cs" />
     <Compile Include="Shape.cs" />
     <Page Include="ColorPicker.xaml">
       <SubType>Designer</SubType>
@@ -100,6 +101,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Thickness1.png" />
+    <Resource Include="Images\Thickness3.png" />
+    <Resource Include="Images\Thickness5.png" />
+    <Resource Include="Images\Thickness7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Ellipse.png" />
+    <Resource Include="Images\Line.png" />
+    <Resource Include="Images\Rectangle.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Thicknesses.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\eraser.png" />
+    <Resource Include="Images\Pencil-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Cursors\Rubber.cur" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
