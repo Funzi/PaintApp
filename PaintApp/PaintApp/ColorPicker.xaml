@@ -7,7 +7,12 @@
         mc:Ignorable="d"
         Title="ColorPicker" Height="350" Width="300">
     <Grid>
-        <ListBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,81" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="colorList" SelectionChanged="colorList_SelectionChanged">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="250"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <ListBox Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,0,0,81" ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="colorList" SelectionChanged="colorList_SelectionChanged">
             <ListBox.ItemsPanel>
                 <ItemsPanelTemplate>
                     <WrapPanel IsItemsHost="True" Orientation="Horizontal"/>
@@ -19,8 +24,8 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
-        <Rectangle x:Name="rtlfill" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="26" Margin="10,243,0,0" Stroke="Black" VerticalAlignment="Top" Width="60" RenderTransformOrigin="0.533,0.6"/>
-        <Button x:Name="cancelButton" Content="Cancel"  Click="cancelButton_Click" Height="20" Width="50" RenderTransformOrigin="4.198,5.508" Margin="225,249,17,50"/>
-        <Button x:Name="okButton" Content="Ok" Click="okButton_Click" Height="20" Width="50" RenderTransformOrigin="0.438,6.665" Margin="157,249,85,50"/>
+        <Rectangle Grid.Row="1" x:Name="rtlfill" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="40" Margin="20,0,0,0" Stroke="Black" Width="60"/>
+        <Button Grid.Row="1" x:Name="cancelButton" Content="Cancel" HorizontalAlignment="Right" Margin="0,0,20,0" Click="cancelButton_Click" Height="30" Width="50"/>
+        <Button Grid.Row="1" x:Name="okButton" Content="Ok" Click="okButton_Click" Margin="40,0,0,0" Height="30" Width="50" />
     </Grid>
 </Window>

@@ -23,8 +23,7 @@ namespace PaintApp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Brush whiteBrush;
-        private Point down, move;
+        private Point down;
         private PathGeometry pathGeometry;
         private PathFigure pathFigure;
         private Path path;
@@ -53,9 +52,11 @@ namespace PaintApp
 
         private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
+            MainCanvas.CaptureMouse();
             if(!whiteBackground)
             {
-                setWhitebackGround();
+                CanvasHelper.setWhitebackGround(MainCanvas);
+                whiteBackground = true;
             }
             
             data.CurrentShape = getCurrentShape();
@@ -104,22 +105,11 @@ namespace PaintApp
             MainCanvas.Children.Add(data.CurrentShape);
         }
 
-        private void setWhitebackGround()
-        {
-            data.CurrentShape = new Rectangle();
-            Canvas.SetLeft(data.CurrentShape, 0);
-            Canvas.SetTop(data.CurrentShape, 0);
-            data.CurrentShape.Stroke = whiteBrush;
-            data.CurrentShape.Fill = whiteBrush;
-            Rect bounds = VisualTreeHelper.GetDescendantBounds(MainCanvas);
-            data.CurrentShape.Height = MainCanvas.ActualHeight;
-            data.CurrentShape.Width = MainCanvas.ActualWidth;
-            MainCanvas.Children.Add(data.CurrentShape);
-            whiteBackground = true;
-        }
+        
 
         private void MainCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
+            MainCanvas.ReleaseMouseCapture();
             if (data.CurrentShape != null)
             {
                 data.CurrentShape = null;
@@ -158,7 +148,7 @@ namespace PaintApp
                 ((Line)data.CurrentShape).Y2 = pos.Y;
             }
             else if (data.MShapeType == ShapeType.ELLIPSE || data.MShapeType == ShapeType.RECTANGLE)
-            {
+            {   
                 double x = Canvas.GetLeft(data.CurrentShape);
                 double y = Canvas.GetTop(data.CurrentShape);
                 data.CurrentShape.Width = Math.Abs(pos.X - x);
@@ -254,128 +244,31 @@ namespace PaintApp
         private void MenuItem_New_Click(object sender, RoutedEventArgs e)
         {
             MainCanvas.Children.Clear();
-            setWhitebackGround();
+            CanvasHelper.setWhitebackGround(MainCanvas);
+            whiteBackground = true;
         }
 
         private void MenuItem_Open_Click(object sender, RoutedEventArgs e)
         {
-            MainCanvas.Children.Clear();
-            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
-            dlg.Title = "Choose an image file";
-            dlg.Filter = "Bitmap files (*.bmp)|*.bmp|JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|PNG (*.png)|*.png|All files (*.*)|*.*";
-            try
-            {
-                if (dlg.ShowDialog() == true)
-                {
-                    ImageBrush brush = new ImageBrush();
-                    BitmapImage img = new BitmapImage(new Uri(dlg.FileName, UriKind.Relative));
-                    var encoder = new PngBitmapEncoder();
-                    encoder.Frames.Add(BitmapFrame.Create(img));
-                    string tempPath = CreateTempFile();
-                    using (var stream = System.IO.File.Open(tempPath, System.IO.FileMode.Open))
-                    {
-                        encoder.Save(stream);
-                        stream.Close();
-                    }
-                    BitmapImage temp = new BitmapImage(new Uri(tempPath, UriKind.Relative));
-                    brush.ImageSource = temp;
-                    MainCanvas.Background = brush;
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error" + ex.Message);
-            }
+            if(FileHelper.openFile(MainCanvas)) 
+                MainCanvas.Children.Clear();
         }
-
-        private string CreateTempFile()
-        {
-            string fileName = string.Empty;
-
-            try
-            {
-                fileName = System.IO.Path.GetTempFileName();
-
-                // Create a FileInfo object to set the file's attributes
-                System.IO.FileInfo fileInfo = new System.IO.FileInfo(fileName);
-
-                // Set the Attribute property of this file to Temporary. 
-                fileInfo.Attributes = System.IO.FileAttributes.Temporary;
-
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to create file." + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-
-            return fileName;
-        }
-        private void MenuItem_Save_Click(object sender, RoutedEventArgs e)
-        {
-            BitmapEncoder pngEncoder = GetBitmapEncoder();
-
-            try
-            {
-                System.IO.MemoryStream ms = new System.IO.MemoryStream();
-
-                pngEncoder.Save(ms);
-                ms.Close();
-                System.IO.File.WriteAllBytes(currentFile, ms.ToArray());
-            }
-            catch (Exception err)
-            {
-                MessageBox.Show(err.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
         
+        private void MenuItem_Save_Click(object sender, RoutedEventArgs e)
+        {   
+            if(currentFile!=null)
+            {
+                FileHelper.saveFile(MainCanvas, currentFile);
+            }
+        }
 
         private void MenuItem_Save_as_Click(object sender, RoutedEventArgs e)
         {
-            BitmapEncoder pngEncoder = GetBitmapEncoder();
-
-            try
+            currentFile = FileHelper.saveFileAs(MainCanvas);
+            if(currentFile!=null)
             {
-                System.IO.MemoryStream ms = new System.IO.MemoryStream();
-
-                pngEncoder.Save(ms);
-                ms.Close();
-                SaveFileDialog saveDialog = new SaveFileDialog();
-                saveDialog.Title = "Save as";
-                saveDialog.Filter = "Bitmap files (*.bmp)|*.bmp|JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|PNG (*.png)|*.png|All files (*.*)|*.*";
-                if (saveDialog.ShowDialog() == true)
-                {
-                    currentFile = saveDialog.FileName;
-                    System.IO.File.WriteAllBytes(currentFile, ms.ToArray());
-                }
+                saveItem.IsEnabled = true;
             }
-            catch (Exception err)
-            {
-                MessageBox.Show(err.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private BitmapEncoder GetBitmapEncoder()
-        {
-            Rect bounds = VisualTreeHelper.GetDescendantBounds(MainCanvas);
-            double dpi = 96d;
-
-
-            RenderTargetBitmap rtb = new RenderTargetBitmap((int)bounds.Width, (int)bounds.Height, dpi, dpi, System.Windows.Media.PixelFormats.Default);
-
-
-            DrawingVisual dv = new DrawingVisual();
-            using (DrawingContext dc = dv.RenderOpen())
-            {
-                VisualBrush vb = new VisualBrush(MainCanvas);
-                dc.DrawRectangle(vb, null, new Rect(new Point(), bounds.Size));
-            }
-
-            rtb.Render(dv);
-
-            BitmapEncoder pngEncoder = new PngBitmapEncoder();
-            pngEncoder.Frames.Add(BitmapFrame.Create(rtb));
-            return pngEncoder;
         }
 
         private void rubberButton_Click(object sender, RoutedEventArgs e)
@@ -388,6 +281,13 @@ namespace PaintApp
         {
             this.Cursor = Cursors.Pen;
             data.MShapeType = ShapeType.PENCIL;
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            MainCanvas.Children.Clear();
+            CanvasHelper.setWhitebackGround(MainCanvas);
+            whiteBackground = true;
         }
 
         private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)

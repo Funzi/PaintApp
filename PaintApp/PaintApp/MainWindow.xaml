@@ -25,10 +25,11 @@
                 <MenuItem Header="_File">
                     <MenuItem Header="_New" Click="MenuItem_New_Click"/>
                     <MenuItem Header="_Open" Click="MenuItem_Open_Click"/>
-                    <MenuItem Header="_Save" Click="MenuItem_Save_Click"/>
+                    <MenuItem x:Name="saveItem" Header="_Save" Click="MenuItem_Save_Click" IsEnabled="False"/>
                     <MenuItem Header="_Save as" Click="MenuItem_Save_as_Click"/>
                     <MenuItem Header="_Exit" Click="MenuItem_Exit_Click"/>
                 </MenuItem>
+                <MenuItem Header="_Clear" Click="MenuItem_Click"/>
             </Menu>
         </Grid>
         <Grid Grid.Row="1">
