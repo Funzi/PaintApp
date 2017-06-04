@@ -105,7 +105,7 @@
                 <Separator/>
                 <Button x:Name="penButton" Click="penButton_Click">
                     <StackPanel Width="20" Height="20">
-                        <Image Source="Images/Pencil-icon.png">
+                        <Image Source="Images/Pencil.png">
                         </Image>
                     </StackPanel>
                 </Button>

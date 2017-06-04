@@ -17,15 +17,8 @@ namespace PaintApp
         public enum ShapeType { PENCIL, LINE, ELLIPSE, RECTANGLE, RUBBER };
         private Shape currentShape;
         private Brush penBrush, whiteBrush;
-        private Point down, move;
         private ShapeType mShapeType;
         private int penThickness;
-        private PathGeometry pathGeometry;
-        private PathFigure pathFigure;
-        private Path path;
-        private Color temp = Colors.Green;
-        private bool whiteBackground;
-        private string currentFile;
         private string myDataProperty;
         private ImageSource rectangleImage, ellipseImage,lineImage;
         private ImageSource thicknessImage1, thicknessImage3, thicknessImage5, thicknessImage7;

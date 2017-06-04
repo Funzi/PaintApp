@@ -18,9 +18,6 @@ using static PaintApp.MyData;
 
 namespace PaintApp
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private Point down;
@@ -30,8 +27,6 @@ namespace PaintApp
         private bool whiteBackground;
         private string currentFile;
         MyData data;
-
-
 
         public MainWindow()
         {
@@ -87,7 +82,7 @@ namespace PaintApp
                 Canvas.SetTop(data.CurrentShape, position.Y);
                 down = new Point(position.X, position.Y);
             }
-            else
+            else if(data.MShapeType == ShapeType.RUBBER)
             {
                 erasePosition(position);
             }
@@ -153,7 +148,7 @@ namespace PaintApp
                 double y = Canvas.GetTop(data.CurrentShape);
                 data.CurrentShape.Width = Math.Abs(pos.X - x);
                 data.CurrentShape.Height = Math.Abs(pos.Y - y);
-            } else
+            } else if(data.MShapeType==ShapeType.RUBBER)
             {
                 erasePosition(pos);
             }
