@@ -33,11 +33,11 @@ namespace PaintApp
             this.DataContext = this;
             InitializeComponent();
             data = new MyData();
-            setDefaultValues();
+            SetDefaultValues();
             this.colorButtton.DataContext = data;
         }
 
-        private void setDefaultValues()
+        private void SetDefaultValues()
         {
             whiteBackground = false;
             shapeImage.Source = data.RectangleImage;
@@ -47,14 +47,14 @@ namespace PaintApp
 
         private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            MainCanvas.CaptureMouse();
+            //MainCanvas.CaptureMouse();
             if(!whiteBackground)
             {
-                CanvasHelper.setWhitebackGround(MainCanvas);
+                CanvasHelper.SetWhitebackGround(MainCanvas);
                 whiteBackground = true;
             }
             
-            data.CurrentShape = getCurrentShape();
+            data.CurrentShape = GetCurrentShape();
             Point position = e.GetPosition(MainCanvas);
 
             if (data.MShapeType == ShapeType.PENCIL)
@@ -84,11 +84,11 @@ namespace PaintApp
             }
             else if(data.MShapeType == ShapeType.RUBBER)
             {
-                erasePosition(position);
+                ErasePosition(position);
             }
         }
 
-        private void erasePosition(Point position)
+        private void ErasePosition(Point position)
         {
             data.CurrentShape = new Rectangle();
             data.CurrentShape.Stroke = data.WhiteBrush;
@@ -104,7 +104,7 @@ namespace PaintApp
 
         private void MainCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            MainCanvas.ReleaseMouseCapture();
+            //MainCanvas.ReleaseMouseCapture();
             if (data.CurrentShape != null)
             {
                 data.CurrentShape = null;
@@ -144,17 +144,17 @@ namespace PaintApp
             }
             else if (data.MShapeType == ShapeType.ELLIPSE || data.MShapeType == ShapeType.RECTANGLE)
             {   
-                double x = Canvas.GetLeft(data.CurrentShape);
-                double y = Canvas.GetTop(data.CurrentShape);
-                data.CurrentShape.Width = Math.Abs(pos.X - x);
-                data.CurrentShape.Height = Math.Abs(pos.Y - y);
+                data.CurrentShape.Width = Math.Abs(pos.X - down.X);
+                data.CurrentShape.Height = Math.Abs(pos.Y - down.Y);
+                Canvas.SetLeft(data.CurrentShape, Math.Min(pos.X,down.X));
+                Canvas.SetTop(data.CurrentShape,Math.Min(pos.Y,down.Y));
             } else if(data.MShapeType==ShapeType.RUBBER)
             {
-                erasePosition(pos);
+                ErasePosition(pos);
             }
         }
 
-        private Shape getCurrentShape()
+        private Shape GetCurrentShape()
         {
             Shape newShape;
             switch (data.MShapeType)
@@ -239,13 +239,13 @@ namespace PaintApp
         private void MenuItem_New_Click(object sender, RoutedEventArgs e)
         {
             MainCanvas.Children.Clear();
-            CanvasHelper.setWhitebackGround(MainCanvas);
+            CanvasHelper.SetWhitebackGround(MainCanvas);
             whiteBackground = true;
         }
 
         private void MenuItem_Open_Click(object sender, RoutedEventArgs e)
         {
-            if(FileHelper.openFile(MainCanvas)) 
+            if(FileHelper.OpenFile(MainCanvas)) 
                 MainCanvas.Children.Clear();
         }
         
@@ -253,13 +253,13 @@ namespace PaintApp
         {   
             if(currentFile!=null)
             {
-                FileHelper.saveFile(MainCanvas, currentFile);
+                FileHelper.SaveFile(MainCanvas, currentFile);
             }
         }
 
         private void MenuItem_Save_as_Click(object sender, RoutedEventArgs e)
         {
-            currentFile = FileHelper.saveFileAs(MainCanvas);
+            currentFile = FileHelper.SaveFileAs(MainCanvas);
             if(currentFile!=null)
             {
                 saveItem.IsEnabled = true;
@@ -281,7 +281,7 @@ namespace PaintApp
         private void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             MainCanvas.Children.Clear();
-            CanvasHelper.setWhitebackGround(MainCanvas);
+            CanvasHelper.SetWhitebackGround(MainCanvas);
             whiteBackground = true;
         }
 

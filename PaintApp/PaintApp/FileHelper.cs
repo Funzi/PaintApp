@@ -13,7 +13,7 @@ namespace PaintApp
 {
     public class FileHelper
     {
-        public static bool openFile(Canvas canvas)
+        public static bool OpenFile(Canvas canvas)
         {
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             dlg.Title = "Choose an image file";
@@ -45,7 +45,7 @@ namespace PaintApp
             }
         }
 
-        public static String saveFileAs(Canvas canvas)
+        public static String SaveFileAs(Canvas canvas)
         {
             BitmapEncoder pngEncoder = GetBitmapEncoder(canvas);
             String savedFile = null;
@@ -72,7 +72,7 @@ namespace PaintApp
             }
         }
 
-        public static void saveFile(Canvas canvas, string filename)
+        public static void SaveFile(Canvas canvas, string filename)
         {
             BitmapEncoder pngEncoder = GetBitmapEncoder(canvas);
 

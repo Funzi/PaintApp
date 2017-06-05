@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PaintApp"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525"
+        Title="PaintApp" Height="350" Width="525"
         MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" MouseMove="MainCanvas_MouseMove">
     <Window.Resources>
         <Style x:Key="menu_item_big" TargetType="MenuItem">

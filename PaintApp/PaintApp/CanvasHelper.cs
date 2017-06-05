@@ -14,7 +14,7 @@ namespace PaintApp
 {
     public static class CanvasHelper
     {
-        public static void setWhitebackGround(Canvas canvas)
+        public static void SetWhitebackGround(Canvas canvas)
         {
             Rectangle background = new Rectangle();
             SolidColorBrush whiteBrush = new SolidColorBrush(Colors.White);
