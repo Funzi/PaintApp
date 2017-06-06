@@ -14,180 +14,79 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using static PaintApp.MyData;
+using static PaintApp.CanvasController;
+using static PaintApp.CanvasControllerImpl;
 
 namespace PaintApp
 {
     public partial class MainWindow : Window
     {
-        private Point down;
-        private PathGeometry pathGeometry;
-        private PathFigure pathFigure;
-        private Path path;
         private bool whiteBackground;
         private string currentFile;
-        MyData data;
+        CanvasControllerImpl controller;
 
         public MainWindow()
         {
             this.DataContext = this;
             InitializeComponent();
-            data = new MyData();
+            controller = new CanvasControllerImpl();
             SetDefaultValues();
-            this.colorButtton.DataContext = data;
+            this.colorButtton.DataContext = controller;
         }
 
         private void SetDefaultValues()
         {
             whiteBackground = false;
-            shapeImage.Source = data.RectangleImage;
-            brushImage.Source = data.ThicknessImage1;
+            shapeImage.Source = controller.RectangleImage;
+            brushImage.Source = controller.ThicknessImage1;
         }
-
-
+        static int count = 0;
         private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            //MainCanvas.CaptureMouse();
+            count++;
             if(!whiteBackground)
             {
                 CanvasHelper.SetWhitebackGround(MainCanvas);
                 whiteBackground = true;
             }
-            
-            data.CurrentShape = GetCurrentShape();
-            Point position = e.GetPosition(MainCanvas);
-
-            if (data.MShapeType == ShapeType.PENCIL)
-            {   
-                pathGeometry = new PathGeometry();
-                pathFigure = new PathFigure();
-                pathFigure.StartPoint = position;
-                pathFigure.IsClosed = false;
-                pathGeometry.Figures.Add(pathFigure);
-                path = new Path();
-                path.Stroke = data.PenBrush;
-                path.StrokeThickness = data.PenThickness;
-                path.Data = pathGeometry;
-                MainCanvas.Children.Add(path);
-            }
-            else if (data.MShapeType == ShapeType.LINE)
-            {
-                MainCanvas.Children.Add(data.CurrentShape);
-                down = new Point(position.X, position.Y);
-            }
-            else if(data.MShapeType == ShapeType.ELLIPSE || data.MShapeType == ShapeType.RECTANGLE)
-            { 
-                MainCanvas.Children.Add(data.CurrentShape);
-                Canvas.SetLeft(data.CurrentShape, position.X);
-                Canvas.SetTop(data.CurrentShape, position.Y);
-                down = new Point(position.X, position.Y);
-            }
-            else if(data.MShapeType == ShapeType.RUBBER)
-            {
-                ErasePosition(position);
-            }
+            controller.MouseDown(MainCanvas, e.GetPosition(MainCanvas));
         }
-
-        private void ErasePosition(Point position)
-        {
-            data.CurrentShape = new Rectangle();
-            data.CurrentShape.Stroke = data.WhiteBrush;
-            data.CurrentShape.Fill = data.WhiteBrush;
-            data.CurrentShape.Width = 32;
-            data.CurrentShape.Height = 32;
-            Canvas.SetLeft(data.CurrentShape, position.X);
-            Canvas.SetTop(data.CurrentShape, position.Y);
-            MainCanvas.Children.Add(data.CurrentShape);
-        }
-
-        
 
         private void MainCanvas_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            //MainCanvas.ReleaseMouseCapture();
-            if (data.CurrentShape != null)
-            {
-                data.CurrentShape = null;
-            }
-            if(pathFigure != null)
-            {
-                pathFigure = null;
-                path = null;
-                pathGeometry = null;
-            }
+            controller.MouseUp(MainCanvas);
         }
 
         private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (data.CurrentShape == null && pathFigure == null)
-            {
-               return;
-            }
-            
-            Point pos = e.GetPosition(MainCanvas);
-            if(pos.X < 0 || pos.Y < 0)
-            {
-                return;
-            }
-            if(data.MShapeType == ShapeType.PENCIL && pathFigure != null)
-            {
-                LineSegment ls = new LineSegment();
-                ls.Point = pos;
-                pathFigure.Segments.Add(ls);
-            }
-            else if (data.MShapeType == ShapeType.LINE)
-            {
-                ((Line)data.CurrentShape).X1 = down.X;
-                ((Line)data.CurrentShape).Y1 = down.Y;
-                ((Line)data.CurrentShape).X2 = pos.X;
-                ((Line)data.CurrentShape).Y2 = pos.Y;
-            }
-            else if (data.MShapeType == ShapeType.ELLIPSE || data.MShapeType == ShapeType.RECTANGLE)
-            {   
-                data.CurrentShape.Width = Math.Abs(pos.X - down.X);
-                data.CurrentShape.Height = Math.Abs(pos.Y - down.Y);
-                Canvas.SetLeft(data.CurrentShape, Math.Min(pos.X,down.X));
-                Canvas.SetTop(data.CurrentShape,Math.Min(pos.Y,down.Y));
-            } else if(data.MShapeType==ShapeType.RUBBER)
-            {
-                ErasePosition(pos);
-            }
-        }
-
-        private Shape GetCurrentShape()
-        {
-            Shape newShape;
-            switch (data.MShapeType)
-            {
-                case ShapeType.RECTANGLE: newShape = new Rectangle(); break;
-                case ShapeType.ELLIPSE: newShape = new Ellipse(); break;
-                case ShapeType.LINE: newShape = new Line(); break;
-                default: return null;
-            }
-            Brush brush = data.PenBrush;
-            newShape.Stroke = brush;
-            newShape.StrokeThickness = data.PenThickness;
-            return newShape;
+            controller.MouseMove(MainCanvas, e.GetPosition(MainCanvas));
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             this.Cursor = Cursors.Arrow;
+            controller.DrawingType1 = DrawingType.SHAPE;
             if (shapeComboCox.SelectedIndex == 0)
             {
-                data.MShapeType = ShapeType.RECTANGLE;
-                shapeImage.Source = data.RectangleImage;
+                controller.MShapeType = ShapeType.RECTANGLE;
+                shapeImage.Source = controller.RectangleImage;
             }
             else if (shapeComboCox.SelectedIndex == 1)
             {
-                data.MShapeType = ShapeType.ELLIPSE;
-                shapeImage.Source = data.EllipseImage;
+                controller.MShapeType = ShapeType.ELLIPSE;
+                shapeImage.Source = controller.EllipseImage;
 
             }
             else if (shapeComboCox.SelectedIndex == 2)
             {
-                data.MShapeType = ShapeType.LINE;
-                shapeImage.Source = data.LineImage;
+                controller.MShapeType = ShapeType.LINE;
+                shapeImage.Source = controller.LineImage;
+
+            }
+            else if (shapeComboCox.SelectedIndex == 3)
+            {
+                controller.MShapeType = ShapeType.POLYGON;
+                shapeImage.Source = controller.LineImage;
 
             }
         }
@@ -196,23 +95,23 @@ namespace PaintApp
         {
             if (brushComboBox.SelectedIndex == 0)
             {
-                data.PenThickness = 1;
-                brushImage.Source = data.ThicknessImage1;
+                controller.PenThickness = 1;
+                brushImage.Source = controller.ThicknessImage1;
             }
             else if (brushComboBox.SelectedIndex == 1)
             {
-                data.PenThickness = 3;
-                brushImage.Source = data.ThicknessImage3;
+                controller.PenThickness = 3;
+                brushImage.Source = controller.ThicknessImage3;
             }
             else if (brushComboBox.SelectedIndex == 2)
             {
-                data.PenThickness = 5;
-                brushImage.Source = data.ThicknessImage5;
+                controller.PenThickness = 5;
+                brushImage.Source = controller.ThicknessImage5;
             }
             else if (brushComboBox.SelectedIndex == 3)
             {
-                data.PenThickness = 7;
-                brushImage.Source = data.ThicknessImage7;
+                controller.PenThickness = 7;
+                brushImage.Source = controller.ThicknessImage7;
             }
         }
 
@@ -232,7 +131,7 @@ namespace PaintApp
             colorPicker.ShowDialog();
             if(colorPicker.DialogResult == true)
             {
-                data.PenBrush = colorPicker.selectedColor;
+                controller.PenBrush = colorPicker.selectedColor;
             }
         }
 
@@ -269,13 +168,18 @@ namespace PaintApp
         private void rubberButton_Click(object sender, RoutedEventArgs e)
         {
             this.Cursor = new Cursor(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Cursors\\Rubber.cur");
-            data.MShapeType = ShapeType.RUBBER;
+            controller.DrawingType1 = DrawingType.ERASER;
         }
 
         private void penButton_Click(object sender, RoutedEventArgs e)
         {
             this.Cursor = Cursors.Pen;
-            data.MShapeType = ShapeType.PENCIL;
+            controller.DrawingType1 = DrawingType.PENCIL;
+        }
+
+        private void cutButton_Click(object sender, RoutedEventArgs e)
+        {
+            controller.DrawingType1 = DrawingType.CUT;
         }
 
         private void MenuItem_Click(object sender, RoutedEventArgs e)

@@ -56,6 +56,11 @@
                                     <Image Stretch="UniformToFill" Source="Images/Line.png"/>
                                 </StackPanel>
                             </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="UniformToFill" Source="Images/Line.png"/>
+                                </StackPanel>
+                            </ComboBoxItem>
                         </ComboBox>
                     </DockPanel>
                 </Button>
@@ -116,8 +121,15 @@
                         </Image>
                     </StackPanel>
                 </Button>
+                <Separator/>
+                <Button x:Name="cutButton" Click="cutButton_Click">
+                    <StackPanel Width="20" Height="20">
+                        <Image Stretch="Uniform" Source="Images/eraser.png">
+                        </Image>
+                    </StackPanel>
+                </Button>
             </ToolBar>
         </Grid>
-       <Canvas Grid.Row="2" Name="MainCanvas"  MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" MouseMove="MainCanvas_MouseMove"/>
+       <Canvas Grid.Row="2" Name="MainCanvas"  />
     </Grid>
 </Window>

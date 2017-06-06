@@ -27,5 +27,17 @@ namespace PaintApp
             background.Width = canvas.ActualWidth;
             canvas.Children.Add(background);
         }
+
+        public static void ErasePosition(Canvas canvas, Point position)
+        {
+            Shape shape = new Rectangle();
+            shape.Stroke = new SolidColorBrush(Colors.White);
+            shape.Fill = new SolidColorBrush(Colors.White);
+            shape.Width = 32;
+            shape.Height = 32;
+            Canvas.SetLeft(shape, position.X);
+            Canvas.SetTop(shape, position.Y);
+            canvas.Children.Add(shape);
+        }
     }
 }
