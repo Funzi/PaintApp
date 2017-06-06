@@ -39,5 +39,19 @@ namespace PaintApp
             Canvas.SetTop(shape, position.Y);
             canvas.Children.Add(shape);
         }
+
+        internal static void AddBrushImage(Canvas canvas, ImageBrush brush, Point position)
+        {
+            Shape shape = new Rectangle();
+            brush.Opacity = 0.3;
+            ImageBrush newBrush = new ImageBrush();
+            newBrush.ImageSource = brush.ImageSource;
+            shape.Fill = newBrush;
+            shape.Width = 32;
+            shape.Height = 32;
+            Canvas.SetLeft(shape, position.X);
+            Canvas.SetTop(shape, position.Y);
+            canvas.Children.Add(shape);
+        }
     }
 }

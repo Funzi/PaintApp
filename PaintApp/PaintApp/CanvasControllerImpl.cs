@@ -33,12 +33,19 @@ namespace PaintApp
             ThicknessImage3 = new BitmapImage(new Uri("Images/Thickness3.png", UriKind.Relative));
             ThicknessImage5 = new BitmapImage(new Uri("Images/Thickness5.png", UriKind.Relative));
             ThicknessImage7 = new BitmapImage(new Uri("Images/Thickness7.png", UriKind.Relative));
+            Heart = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Heart.png", UriKind.Absolute));
+            Ball = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Ball.png", UriKind.Absolute));
+            Slovakia = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Czech.png", UriKind.Absolute));
+            Czech = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Slovakia.png", UriKind.Absolute));
 
             MShapeType = ShapeType.RECTANGLE;
             DrawingType1 = DrawingType.SHAPE;
             PenThickness = 1;
 
             cutRectangleBrush = new SolidColorBrush(Colors.Black);
+
+            CustomBrush = new ImageBrush();
+            CustomBrush.ImageSource = Heart;
         }
         
         public override void MouseDown(Canvas MainCanvas, Point position)
@@ -70,6 +77,7 @@ namespace PaintApp
             }
             else if (DrawingType1 == DrawingType.PENCIL)
             {
+               
                 pathGeometry = new PathGeometry();
                 pathFigure = new PathFigure();
                 pathFigure.StartPoint = position;
@@ -98,6 +106,10 @@ namespace PaintApp
                 Canvas.SetLeft(CurrentShape, position.X);
                 Canvas.SetTop(CurrentShape, position.Y);
                 down = new Point(position.X, position.Y);
+            }
+            else if (DrawingType1 == DrawingType.BRUSH)
+            {
+                CanvasHelper.AddBrushImage(MainCanvas, CustomBrush, position);
             }
         }
 
@@ -140,6 +152,7 @@ namespace PaintApp
                 }
                 else if (MShapeType == ShapeType.ELLIPSE || MShapeType == ShapeType.RECTANGLE)
                 {
+                    
                     CurrentShape.Width = Math.Abs(position.X - down.X);
                     CurrentShape.Height = Math.Abs(position.Y - down.Y);
                     Canvas.SetLeft(CurrentShape, Math.Min(position.X, down.X));
@@ -164,6 +177,10 @@ namespace PaintApp
                 Canvas.SetLeft(CurrentShape, Math.Min(position.X, down.X));
                 Canvas.SetTop(CurrentShape, Math.Min(position.Y, down.Y));
             }
+            else if(DrawingType1 == DrawingType.BRUSH)
+            {
+                CanvasHelper.AddBrushImage(MainCanvas, CustomBrush, position);
+            }
         }
 
         public override void MouseUp(Canvas mainCanvas)
@@ -171,6 +188,12 @@ namespace PaintApp
             if(DrawingType1==DrawingType.CUT && CurrentShape != null)
             {
                 ClipImage(mainCanvas);
+            }
+            if(DrawingType1==DrawingType.SHAPE && ShapeType.RECTANGLE == MShapeType)
+            {
+                ImageBrush brush = new ImageBrush();
+                brush.ImageSource = Heart;
+                CurrentShape.Fill = brush;
             }
             if (CurrentShape != null)
             {
@@ -186,19 +209,29 @@ namespace PaintApp
         }
 
         private void ClipImage(Canvas canvas)
-        {   
-            // Create a BitmapImage
+        {   // Create a BitmapImage
             WriteableBitmap bmpImage = SaveAsWriteableBitmap(canvas);
             // Clipped Image
             Image clippedImage = new Image();
             clippedImage.Source = bmpImage;
             EllipseGeometry clipGeometry = new EllipseGeometry(new Point(150, 160), CurrentShape.Width, CurrentShape.Height);
             clippedImage.Clip = clipGeometry;
-            canvas.Children.Add(clippedImage);
+            Canvas.SetLeft(clippedImage,0);
+            Canvas.SetTop(clippedImage,0);
+            CanvasHelper.SetWhitebackGround(canvas);
+            Canvas tempCanvas = new Canvas();
+            tempCanvas.Children.Add(clippedImage);
+            tempCanvas.Clip = new RectangleGeometry(new Rect(Canvas.GetLeft(CurrentShape), Canvas.GetTop(CurrentShape), CurrentShape.Width, CurrentShape.Height));
+            canvas.Children.Remove(CurrentShape);
+            canvas.Clip = new RectangleGeometry(new Rect(Canvas.GetLeft(CurrentShape),Canvas.GetTop(CurrentShape),CurrentShape.Width,CurrentShape.Height));
+            Canvas.SetZIndex(tempCanvas, 0);
+
+            canvas.Children.Add(tempCanvas);
         }
 
         public WriteableBitmap SaveAsWriteableBitmap(Canvas surface)
-        {
+        {   
+            
             if (surface == null) return null;
 
             // Save current canvas transform
@@ -207,7 +240,7 @@ namespace PaintApp
             surface.LayoutTransform = null;
 
             // Get the size of canvas
-            Size size = new Size(surface.ActualWidth, surface.ActualHeight);
+            Size size = new Size(CurrentShape.ActualWidth, CurrentShape.ActualHeight);
             // Measure and arrange the surface
             // VERY IMPORTANT
             surface.Measure(size);

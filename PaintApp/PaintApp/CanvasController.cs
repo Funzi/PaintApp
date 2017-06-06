@@ -15,15 +15,19 @@ namespace PaintApp
     abstract class CanvasController : INotifyPropertyChanged
     {
         public enum ShapeType { LINE, ELLIPSE, RECTANGLE, POLYGON };
-        public enum DrawingType { SHAPE, ERASER, CUT, PENCIL }
+        public enum DrawingType { SHAPE, ERASER, CUT, PENCIL, BRUSH }
         private Shape currentShape;
         private Brush penBrush, whiteBrush;
         private ShapeType mShapeType;
         private DrawingType drawingType;
+        private string mousePositionText;
+        private string canvasSizeText;
         private int penThickness;
         private string myDataProperty;
         private ImageSource rectangleImage, ellipseImage, lineImage;
         private ImageSource thicknessImage1, thicknessImage3, thicknessImage5, thicknessImage7;
+        private ImageSource heart,ball,slovakia,czech;
+        private ImageBrush customBrush;
        
 
         public ShapeType MShapeType { get => mShapeType; set => mShapeType = value; }
@@ -41,6 +45,12 @@ namespace PaintApp
         public ImageSource ThicknessImage3 { get => thicknessImage3; set => thicknessImage3 = value; }
         public ImageSource ThicknessImage5 { get => thicknessImage5; set => thicknessImage5 = value; }
         public ImageSource ThicknessImage7 { get => thicknessImage7; set => thicknessImage7 = value; }
+        public ImageSource Heart { get => heart; set => heart = value; }
+        public ImageSource Ball { get => ball; set => ball = value; }
+        public ImageSource Slovakia { get => slovakia; set => slovakia = value; }
+        public ImageSource Czech { get => czech; set => czech = value; }
+
+        public ImageBrush CustomBrush { get => customBrush; set => customBrush = value; }
 
         public abstract void MouseDown(Canvas mainCanvas, Point position);
         public abstract void MouseMove(Canvas mainCanvas, Point position);
@@ -65,6 +75,26 @@ namespace PaintApp
             {
                 penBrush = value;
                 OnPropertyChanged("Penbrush");
+            }
+        }
+
+        public string MousePositionText
+        {
+            get { return mousePositionText; }
+            set
+            {
+                mousePositionText = value;
+                OnPropertyChanged("MousePositionText");
+            }
+        }
+
+        public string CanvasSizeText
+        {
+            get { return canvasSizeText; }
+            set
+            {
+                canvasSizeText = value;
+                OnPropertyChanged("CanvasSizeText");
             }
         }
 

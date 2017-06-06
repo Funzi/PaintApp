@@ -32,6 +32,7 @@ namespace PaintApp
             controller = new CanvasControllerImpl();
             SetDefaultValues();
             this.colorButtton.DataContext = controller;
+            this.statusBar.DataContext = controller;
         }
 
         private void SetDefaultValues()
@@ -59,7 +60,9 @@ namespace PaintApp
 
         private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            controller.MouseMove(MainCanvas, e.GetPosition(MainCanvas));
+            Point position = e.GetPosition(MainCanvas);
+            controller.MousePositionText = String.Format("X:{0} Y:{1}", position.X, position.Y);
+            controller.MouseMove(MainCanvas, position);
         }
 
         private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -192,6 +195,45 @@ namespace PaintApp
         private void MenuItem_Exit_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            Size size = e.NewSize;
+            controller.CanvasSizeText = String.Format("Width:{0} Height:{1}", size.Width,size.Height-100);
+        }
+
+        private void brushButton_Click(object sender, RoutedEventArgs e)
+        {
+            controller.DrawingType1 = DrawingType.BRUSH;
+        }
+
+        private void customBrushButton_Click(object sender, RoutedEventArgs e)
+        {
+            customBrushComboBox.IsDropDownOpen = true;
+        }
+
+        private void customBrushComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            controller.DrawingType1 = DrawingType.BRUSH;
+            this.Cursor = Cursors.Hand;
+            if (customBrushComboBox.SelectedIndex == 0)
+            {
+                controller.CustomBrush.ImageSource = controller.Heart;
+            }
+            else if (customBrushComboBox.SelectedIndex == 1)
+            {
+                controller.CustomBrush.ImageSource = controller.Ball;
+            }
+            else if (customBrushComboBox.SelectedIndex == 2)
+            {
+                controller.CustomBrush.ImageSource = controller.Czech;
+            }
+            else if (customBrushComboBox.SelectedIndex == 3)
+            {
+                controller.CustomBrush.ImageSource = controller.Slovakia;
+            }
+            customBrushImage.Source = controller.CustomBrush.ImageSource;
         }
     }
 }

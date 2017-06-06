@@ -3,22 +3,24 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PaintApp"
+        xmlns:clr="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
         Title="PaintApp" Height="350" Width="525"
-        MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" MouseMove="MainCanvas_MouseMove">
+        MouseDown="MainCanvas_MouseDown" MouseUp="MainCanvas_MouseUp" MouseMove="MainCanvas_MouseMove" SizeChanged="Window_SizeChanged">
     <Window.Resources>
         <Style x:Key="menu_item_big" TargetType="MenuItem">
             <Setter Property="Background" Value="Black"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="FontSize" Value="20"/>
         </Style>
+        
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="20" MaxHeight="50"/>
             <RowDefinition Height="50" MaxHeight="50"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="20"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Menu>
@@ -37,7 +39,11 @@
                 <Button Name="ShapeButtton" Click="ShapeButtton_Click">
                     <DockPanel>
                         <StackPanel Width="20" Height="20">
-                            <Image x:Name="shapeImage" Stretch="UniformToFill"/>
+                            <Image x:Name="shapeImage" Stretch="UniformToFill">
+                                <Image.ToolTip >
+                                    <TextBlock Text="Shapes"/>
+                                </Image.ToolTip>
+                            </Image>
                         </StackPanel>
 
                         <ComboBox Name="shapeComboCox" Width="0" DockPanel.Dock="Right" SelectionChanged="ComboBox_SelectionChanged">
@@ -69,7 +75,11 @@
                 <Button x:Name="brushButtton" Click="brushButtton_Click">
                     <DockPanel>
                         <StackPanel Width="20" Height="20" >
-                            <Image x:Name="brushImage" Stretch="UniformToFill"/>
+                            <Image x:Name="brushImage" Stretch="UniformToFill">
+                                <Image.ToolTip >
+                                    <TextBlock Text="Thickness"/>
+                                </Image.ToolTip>
+                            </Image>
                         </StackPanel>
 
                         <ComboBox x:Name="brushComboBox" Width="0" DockPanel.Dock="Right" SelectionChanged="brushComboBox_SelectionChanged">
@@ -111,6 +121,10 @@
                 <Button x:Name="penButton" Click="penButton_Click">
                     <StackPanel Width="20" Height="20">
                         <Image Source="Images/Pencil.png">
+                            <Image.ToolTip >
+                                <TextBlock Text="Pen drawing"/>
+                            </Image.ToolTip>
+                    
                         </Image>
                     </StackPanel>
                 </Button>
@@ -118,6 +132,9 @@
                 <Button x:Name="rubberButton" Click="rubberButton_Click">
                     <StackPanel Width="20" Height="20">
                         <Image Stretch="Uniform" Source="Images/eraser.png">
+                            <Image.ToolTip >
+                                <TextBlock Text="Erase area"/>
+                            </Image.ToolTip>
                         </Image>
                     </StackPanel>
                 </Button>
@@ -125,11 +142,63 @@
                 <Button x:Name="cutButton" Click="cutButton_Click">
                     <StackPanel Width="20" Height="20">
                         <Image Stretch="Uniform" Source="Images/eraser.png">
+                            <Image.ToolTip >
+                                <TextBlock Text="Cut area"/>
+                            </Image.ToolTip>
                         </Image>
                     </StackPanel>
+                </Button>
+                <Separator/>
+                <Button x:Name="customBrushButton" Click="customBrushButton_Click">
+                    <DockPanel>
+                        <StackPanel Width="20" Height="20" >
+                            <Image x:Name="customBrushImage" Stretch="UniformToFill" Source="Images/Heart.png">
+                                <Image.ToolTip >
+                                    <TextBlock Text="Custom Brush"/>
+                                </Image.ToolTip>
+                            </Image>
+                        </StackPanel>
+
+                        <ComboBox x:Name="customBrushComboBox" Width="0" DockPanel.Dock="Right" SelectionChanged="customBrushComboBox_SelectionChanged">
+                            <ComboBoxItem>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="UniformToFill" Source="Images/Heart.png"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="UniformToFill" Source="Images/Ball.png"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="Fill" Source="Images/Slovakia.png"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel>
+                                    <StackPanel Width="20" Height="20">
+                                        <Image Stretch="Uniform" Source="Images/Czech.png"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </ComboBoxItem>
+                        </ComboBox>
+                    </DockPanel>
                 </Button>
             </ToolBar>
         </Grid>
        <Canvas Grid.Row="2" Name="MainCanvas"  />
+        <StatusBar x:Name="statusBar" Grid.Row="3">
+            <StatusBarItem HorizontalAlignment="Left">
+                <StatusBarItem.Content>
+                    <TextBlock Text="{Binding MousePositionText, UpdateSourceTrigger=PropertyChanged}" />
+                </StatusBarItem.Content>
+            </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <StatusBarItem.Content>
+                    <TextBlock Text="{Binding CanvasSizeText}"/>
+                </StatusBarItem.Content>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
