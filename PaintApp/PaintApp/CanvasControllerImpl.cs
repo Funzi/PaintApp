@@ -22,17 +22,21 @@ namespace PaintApp
         private Point down;
         private bool isDrawing;
         private Brush cutRectangleBrush;
+        private PointCollection points = new PointCollection();
 
         public CanvasControllerImpl()
         {
             PenBrush = new SolidColorBrush(Colors.Black);
-            RectangleImage = new BitmapImage(new Uri("Images/Rectangle.png", UriKind.Relative));
-            EllipseImage = new BitmapImage(new Uri("Images/Ellipse.png", UriKind.Relative));
-            LineImage = new BitmapImage(new Uri("Images/Line.png", UriKind.Relative));
-            ThicknessImage1 = new BitmapImage(new Uri("Images/Thickness1.png", UriKind.Relative));
-            ThicknessImage3 = new BitmapImage(new Uri("Images/Thickness3.png", UriKind.Relative));
-            ThicknessImage5 = new BitmapImage(new Uri("Images/Thickness5.png", UriKind.Relative));
-            ThicknessImage7 = new BitmapImage(new Uri("Images/Thickness7.png", UriKind.Relative));
+            RectangleImage = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Rectangle.png", UriKind.Absolute));
+            EllipseImage = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Ellipse.png", UriKind.Absolute));
+            LineImage = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Line.png", UriKind.Absolute));
+            TriangleImage = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Triangle.png", UriKind.Absolute));
+            StarImage = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Star.png", UriKind.Absolute));
+
+            ThicknessImage1 = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Thickness1.png", UriKind.Absolute));
+            ThicknessImage3 = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Thickness3.png", UriKind.Absolute));
+            ThicknessImage5 = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Thickness5.png", UriKind.Absolute));
+            ThicknessImage7 = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Thickness7.png", UriKind.Absolute));
             Heart = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Heart.png", UriKind.Absolute));
             Ball = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Ball.png", UriKind.Absolute));
             Slovakia = new BitmapImage(new Uri(System.IO.Directory.GetCurrentDirectory() + "\\..\\..\\Images\\Czech.png", UriKind.Absolute));
@@ -62,11 +66,13 @@ namespace PaintApp
                 }
                 else if (MShapeType == ShapeType.POLYGON)
                 {
+                    points = new PointCollection();
+                    SetStroke(CurrentShape);
+                    points.Add(down);
+                    ((Polygon)CurrentShape).Points = points;
                     MainCanvas.Children.Add(CurrentShape);
                     down = new Point(position.X, position.Y);
-                    polygonPoints = new PointCollection();
-                    polygonPoints.Add(down);
-                    ((Polygon)CurrentShape).Points = polygonPoints;
+                    
                 }
                 else if (MShapeType == ShapeType.ELLIPSE || MShapeType == ShapeType.RECTANGLE)
                 {
@@ -74,10 +80,15 @@ namespace PaintApp
                     Canvas.SetLeft(CurrentShape, position.X);
                     Canvas.SetTop(CurrentShape, position.Y);
                 }
+                else if (MShapeType == ShapeType.STAR)
+                {
+                 
+                    MainCanvas.Children.Add(CurrentShape);
+                    down = new Point(position.X, position.Y);
+                }
             }
             else if (DrawingType1 == DrawingType.PENCIL)
             {
-               
                 pathGeometry = new PathGeometry();
                 pathFigure = new PathFigure();
                 pathFigure.StartPoint = position;
@@ -121,6 +132,7 @@ namespace PaintApp
                 case ShapeType.RECTANGLE: return new Rectangle();
                 case ShapeType.LINE: return new Line();
                 case ShapeType.POLYGON: return new Polygon();
+                case ShapeType.STAR: return new Polygon();
                 default: return null;
             }
         }
@@ -147,8 +159,15 @@ namespace PaintApp
                 }
                 else if (MShapeType == ShapeType.POLYGON)
                 {
-                    polygonPoints.Add(position);
-                    ((Polygon)CurrentShape).Points = polygonPoints;
+                   if(points.Count == 4)
+                    {
+                        points.RemoveAt(3);
+                        points.RemoveAt(2);
+                        points.RemoveAt(1);
+                    }
+                    points.Add(new Point(down.X, position.Y));
+                    points.Add(new Point(position.X, down.Y));
+                    points.Add(new Point(down.X, down.Y));
                 }
                 else if (MShapeType == ShapeType.ELLIPSE || MShapeType == ShapeType.RECTANGLE)
                 {
@@ -158,6 +177,29 @@ namespace PaintApp
                     Canvas.SetLeft(CurrentShape, Math.Min(position.X, down.X));
                     Canvas.SetTop(CurrentShape, Math.Min(position.Y, down.Y));
                 }
+                else if (MShapeType == ShapeType.STAR)
+                {
+                    PointCollection tempPoints = new PointCollection();
+                    SetStroke(CurrentShape);
+                    double sizeX = Math.Abs(position.X-down.X)/3;
+                    double sizeY = Math.Abs(position.Y - down.Y);
+                    double xMin = Math.Min(position.X, down.X);
+                    double yMin = Math.Min(position.Y, down.Y);
+
+                    if ((yMin - sizeY) < 0) //OutOfBounds
+                        return;
+                    tempPoints.Add(new Point(xMin,yMin));
+                    tempPoints.Add(new Point(xMin  + sizeX, yMin - sizeY / 3));
+                    tempPoints.Add(new Point(xMin  + (float)3 / 2 * sizeX, yMin - sizeY));
+                    tempPoints.Add(new Point(xMin  + 2 * sizeX, yMin - sizeY / 3));
+                    tempPoints.Add(new Point(xMin  + 3 * sizeX, yMin));
+                    tempPoints.Add(new Point(xMin  + 2 * sizeX, yMin + sizeY / 3));
+                    tempPoints.Add(new Point(xMin  + (float)3 / 2 * sizeX, yMin + sizeY));
+                    tempPoints.Add(new Point(xMin  + sizeX, yMin + sizeY / 3));
+                    tempPoints.Add(new Point(xMin, yMin));
+                    ((Polygon)CurrentShape).Points = tempPoints;
+                }
+                
             }
             if (DrawingType1 == DrawingType.PENCIL && pathFigure != null)
             {
@@ -199,13 +241,16 @@ namespace PaintApp
                 path = null;
                 pathGeometry = null;
             }
+            if(points !=null)
+            {
+                points = null;
+            }
             isDrawing = false;
         }
 
         private void ClipImage(Canvas canvas)
-        {   // Create a BitmapImage
+        { 
             WriteableBitmap bmpImage = SaveAsWriteableBitmap(canvas);
-            // Clipped Image
             Image clippedImage = new Image();
             clippedImage.Source = bmpImage;
             EllipseGeometry clipGeometry = new EllipseGeometry(new Point(150, 160), CurrentShape.Width, CurrentShape.Height);
@@ -219,7 +264,6 @@ namespace PaintApp
             canvas.Children.Remove(CurrentShape);
             canvas.Clip = new RectangleGeometry(new Rect(Canvas.GetLeft(CurrentShape),Canvas.GetTop(CurrentShape),CurrentShape.Width,CurrentShape.Height));
             Canvas.SetZIndex(tempCanvas, 0);
-
             canvas.Children.Add(tempCanvas);
         }
 
@@ -228,32 +272,15 @@ namespace PaintApp
             
             if (surface == null) return null;
 
-            // Save current canvas transform
             Transform transform = surface.LayoutTransform;
-            // reset current transform (in case it is scaled or rotated)
             surface.LayoutTransform = null;
-
-            // Get the size of canvas
             Size size = new Size(CurrentShape.ActualWidth, CurrentShape.ActualHeight);
-            // Measure and arrange the surface
-            // VERY IMPORTANT
             surface.Measure(size);
             surface.Arrange(new Rect(size));
-
-            // Create a render bitmap and push the surface to it
-            RenderTargetBitmap renderBitmap = new RenderTargetBitmap(
-              (int)size.Width,
-              (int)size.Height,
-              96d,
-              96d,
-              PixelFormats.Pbgra32);
+            RenderTargetBitmap renderBitmap = new RenderTargetBitmap((int)size.Width, (int)size.Height, 96d, 96d, PixelFormats.Pbgra32);
             renderBitmap.Render(surface);
-
-
-            //Restore previously saved layout
             surface.LayoutTransform = transform;
 
-            //create and return a new WriteableBitmap using the RenderTargetBitmap
             return new WriteableBitmap(renderBitmap);
 
         }

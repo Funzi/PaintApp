@@ -14,8 +14,8 @@ namespace PaintApp
     
     abstract class CanvasController : INotifyPropertyChanged
     {
-        public enum ShapeType { LINE, ELLIPSE, RECTANGLE, POLYGON };
-        public enum DrawingType { SHAPE, ERASER, CUT, PENCIL, BRUSH }
+        public enum ShapeType { LINE, ELLIPSE, RECTANGLE, POLYGON, STAR };
+        public enum DrawingType { SHAPE, ERASER, CUT, PENCIL, BRUSH}
         private Shape currentShape;
         private Brush penBrush, whiteBrush;
         private ShapeType mShapeType;
@@ -24,7 +24,7 @@ namespace PaintApp
         private string canvasSizeText;
         private int penThickness;
         private string myDataProperty;
-        private ImageSource rectangleImage, ellipseImage, lineImage;
+        private ImageSource rectangleImage, ellipseImage, lineImage, triangleImage, starImage;
         private ImageSource thicknessImage1, thicknessImage3, thicknessImage5, thicknessImage7;
         private ImageSource heart,ball,slovakia,czech;
         private ImageBrush customBrush;
@@ -40,6 +40,8 @@ namespace PaintApp
         public ImageSource EllipseImage { get => ellipseImage; set => ellipseImage = value; }
         public ImageSource LineImage { get => lineImage; set => lineImage = value; }
         public ImageSource RectangleImage { get => rectangleImage; set => rectangleImage = value; }
+        public ImageSource TriangleImage { get => triangleImage; set => triangleImage = value; }
+        public ImageSource StarImage { get => starImage; set => starImage = value; }
 
         public ImageSource ThicknessImage1 { get => thicknessImage1; set => thicknessImage1 = value; }
         public ImageSource ThicknessImage3 { get => thicknessImage3; set => thicknessImage3 = value; }
@@ -97,7 +99,6 @@ namespace PaintApp
                 OnPropertyChanged("CanvasSizeText");
             }
         }
-
 
         private void OnPropertyChanged(string info)
         {

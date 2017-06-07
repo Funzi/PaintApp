@@ -40,7 +40,7 @@ namespace PaintApp
             canvas.Children.Add(shape);
         }
 
-        internal static void AddBrushImage(Canvas canvas, ImageBrush brush, Point position)
+        public static void AddBrushImage(Canvas canvas, ImageBrush brush, Point position)
         {
             Shape shape = new Rectangle();
             ImageBrush newBrush = new ImageBrush();
@@ -51,6 +51,20 @@ namespace PaintApp
             Canvas.SetLeft(shape, position.X);
             Canvas.SetTop(shape, position.Y);
             canvas.Children.Add(shape);
+        }
+
+        public static Geometry GenerateTriangleGeometry(Canvas canvas, Point position)
+        {
+            PathGeometry pathGeometry = new PathGeometry();
+            PathFigure pathFigure = new PathFigure();
+            pathFigure.StartPoint = position;
+            pathFigure.IsClosed = true;
+
+            LineSegment ls1 = new LineSegment();
+            ls1.Point = new Point(position.X, position.Y);
+            pathFigure.Segments.Add(ls1);
+            pathGeometry.Figures.Add(pathFigure);
+            return pathGeometry;
         }
     }
 }

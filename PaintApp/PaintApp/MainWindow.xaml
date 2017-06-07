@@ -64,7 +64,12 @@
                             </ComboBoxItem>
                             <ComboBoxItem>
                                 <StackPanel Width="20" Height="20">
-                                    <Image Stretch="UniformToFill" Source="Images/Line.png"/>
+                                    <Image Stretch="UniformToFill" Source="Images/Triangle.png"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem>
+                                <StackPanel Width="20" Height="20">
+                                    <Image Stretch="UniformToFill" Source="Images/Star.png"/>
                                 </StackPanel>
                             </ComboBoxItem>
                         </ComboBox>
@@ -141,7 +146,7 @@
                 <Separator/>
                 <Button x:Name="cutButton" Click="cutButton_Click">
                     <StackPanel Width="20" Height="20">
-                        <Image Stretch="Uniform" Source="Images/eraser.png">
+                        <Image Stretch="UniformToFill" Source="Images/Cut.png">
                             <Image.ToolTip >
                                 <TextBlock Text="Cut area"/>
                             </Image.ToolTip>

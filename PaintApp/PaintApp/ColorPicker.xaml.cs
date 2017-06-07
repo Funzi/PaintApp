@@ -26,20 +26,7 @@ namespace PaintApp
         public ColorPicker()
         {
             InitializeComponent();
-            //this.colorList.ItemsSource = typeof(Brushes).GetProperties();
-            var properties = typeof(Colors).GetProperties();
-            var colors = new ArrayList();
-            foreach (PropertyInfo prop in properties)
-            {
-                // get the value of this static property
-                var color = (Color)prop.GetValue(null, null);
-                // skip colors that are not interesting
-                if (color == Colors.Transparent) continue;
-                // create a solid brush of this color
-                Brush brush = new SolidColorBrush(color);
-                colors.Add(brush);
-            }
-            this.colorList.ItemsSource = colors;
+            this.colorList.ItemsSource = typeof(Brushes).GetProperties();
         }
         private void Window_Loaded_1(object sender, RoutedEventArgs e)
         {
@@ -48,7 +35,7 @@ namespace PaintApp
 
         private void colorList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            selectedColor = (e.AddedItems[0] as Brush);
+            selectedColor = (Brush)(e.AddedItems[0] as PropertyInfo).GetValue(null, null);
             rtlfill.Fill = selectedColor;
         }
 

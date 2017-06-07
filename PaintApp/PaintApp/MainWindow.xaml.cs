@@ -89,8 +89,12 @@ namespace PaintApp
             else if (shapeComboCox.SelectedIndex == 3)
             {
                 controller.MShapeType = ShapeType.POLYGON;
-                shapeImage.Source = controller.LineImage;
-
+                shapeImage.Source = controller.TriangleImage;
+            }
+            else if (shapeComboCox.SelectedIndex == 4)
+            {
+                controller.MShapeType = ShapeType.STAR;
+                shapeImage.Source = controller.StarImage;
             }
         }
 
