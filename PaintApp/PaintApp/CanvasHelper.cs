@@ -43,7 +43,6 @@ namespace PaintApp
         internal static void AddBrushImage(Canvas canvas, ImageBrush brush, Point position)
         {
             Shape shape = new Rectangle();
-            brush.Opacity = 0.3;
             ImageBrush newBrush = new ImageBrush();
             newBrush.ImageSource = brush.ImageSource;
             shape.Fill = newBrush;

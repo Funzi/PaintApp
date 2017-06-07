@@ -189,12 +189,6 @@ namespace PaintApp
             {
                 ClipImage(mainCanvas);
             }
-            if(DrawingType1==DrawingType.SHAPE && ShapeType.RECTANGLE == MShapeType)
-            {
-                ImageBrush brush = new ImageBrush();
-                brush.ImageSource = Heart;
-                CurrentShape.Fill = brush;
-            }
             if (CurrentShape != null)
             {
                 CurrentShape = null;
